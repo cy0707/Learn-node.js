@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%if(username){%>
+      <title><%=username%>的说说</title>
+    <%} else {%>
+      <title>此人不存在</title>
+    <%}%>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <body>
+    <% include header.ejs %>    
+    <div class="container">
+      <!-- 头像 -->
+      <%if(username){%>
+        <img src="../<%=avater%>" alt="">
+        <h2><span id="username"><%=username%></span>的说说</h2>
+      <%}%>
+      <!-- 说说列表 -->
+      <div class="userpublic-list"></div>
+    </div>
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+      $(function(){
+         let userPublicList = $('.userpublic-list');
+         let publicStr = '';
+        // ajax获取全部说说
+        if ($('#username').length > 0) {
+          //如果用户存在的话
+          const username = $('#username').text();
+          $.ajax({
+            url: '/user/public?username=' + username,
+          })
+          .done(function(data) {
+
+            if (data == '-1' || data.length == 0) {
+              //此人没有发表过任何说说
+              publicStr = '此人太懒了，还没有发表任何说说';
+              userPublicList.html(publicStr);
+            }else{
+              for (let i = 0; i < data.length; i++) {
+                publicStr += `<div class="list-group">
+                                <a href="#" class="list-group-item">
+                                  <p class="list-group-item-text">${data[i].content}</p>
+                                  <p class="list-group-item-text">${data[i].pubTime}</p>
+                                </a>
+                              </div>`;
+              }
+              userPublicList.html(publicStr);
+            }
+          })
+          .fail(function() {
+            console.log("error");
+          });
+
+        }else {
+          // 如果此人不存在
+          publicStr = '此人不存在';
+          userPublicList.html(publicStr);
+        }
+      });
+    </script>
+  </body>
+</html>

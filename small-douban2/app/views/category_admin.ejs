@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('common/head'); %>
+  <title><%= title %></title>
+</head>
+<body>
+  <%- include('common/header'); %>
+  <div class="container">
+    <div class="row">
+      <form class="form-horizontal" action="/admin/category" method="POST">
+        <!-- 添加一个隐藏的表单域,来存储更新数据的id -->
+        <div class="form-group">
+          <label for="inputcategory" class="col-sm-2 control-lable">电影分类</label>
+          <div class="col-sm-10">
+            <input id="inputcategory" class="form-control" type="text" name="category[name]">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button class="btn btn-default" type="submit">录入</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

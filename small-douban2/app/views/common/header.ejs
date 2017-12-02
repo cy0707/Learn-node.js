@@ -1,0 +1,107 @@
+<div class="container">
+  <div class="row">
+    <div class="page-header clearfix">
+      <h1><%=title%></h1>
+      <div class="col-md-4">
+        <h4>重度科幻迷</h4>
+      </div>
+      <div class="col-md-8">
+        <form action="/results" method="GET">
+          <div class="input-group col-sm-4 pull-right">
+            <input class="form-control" type="text" name="q">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="submit">搜索</button>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<nav class="navbar navbar-default navbar-fixed-bottom">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">重度科幻迷</a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <% if (user) { -%>
+          <li><a>欢迎您<%= user.username %></a></li>
+          <li><a href="/logout">退出</a></li>
+        <% } else { -%>
+          <li><a href="#" data-toggle="modal" data-target="#signupModel">注册</a></li>
+          <li><a href="#" data-toggle="modal" data-target="#signinModel">登陆</a></li>
+        <% } -%>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container -->
+</nav>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="signupModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <form>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">注册</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                  <label for="signupName">用户名</label>
+                  <input class="form-control" id="signupName" type="text" name="user[username]">
+                </div>
+                <div class="form-group">
+                  <label for="signupPassword">密码</label>
+                  <input class="form-control" id="signupPassword" type="password" name="user[password]">
+                </div>
+                <!-- 错误提示 -->
+                <div class="alert alert-success pop-success"></div>
+                <div class="alert alert-danger pop-danger"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="signup">注册</button>
+            </div>
+          </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="signinModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <form>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">登陆</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                  <label for="signinName">用户名</label>
+                  <input class="form-control" id="signinName" type="text" name="user[username]">
+                </div>
+                <div class="form-group">
+                  <label for="signinPassword">密码</label>
+                  <input class="form-control" id="signinPassword" type="password" name="user[password]">
+                </div>
+                <!-- 错误提示 -->
+                <div class="alert alert-success pop-success"></div>
+                <div class="alert alert-danger pop-danger"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="signin">登陆</button>
+            </div>
+          </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<script src="/js/sign.js"></script>

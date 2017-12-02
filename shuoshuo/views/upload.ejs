@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>头像上传</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <body>
+    <% include header.ejs %>    
+    <div class="container">
+    <!-- 提交到获取坐标的页面 -->
+      <form enctype="multipart/form-data" method="POST" action="/douploadAvater"> 
+        <div class="form-group">
+          <label for="exampleInputFile">选择头像</label>
+          <input type="file" id="exampleInputFile" name="pic">
+        </div>
+        <button type="submit" class="btn btn-default">上传</button>
+      </form>
+    </div>
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>

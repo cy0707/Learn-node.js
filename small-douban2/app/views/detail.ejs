@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('common/head'); %>
+  <title><%= title %></title>
+</head>
+<body>
+  <%- include('common/header'); %>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-7">
+        <embed src="<%= movie.flash%>" allowFullScreen="true",
+        quality="high" width="720" height="600" type="application/x-shockwave-flash">
+        <!-- 评论列表 -->
+        <div class="panel panel-dafault" style="padding-bottom: 80px;">
+          <div class="panel-heading">
+            <h3>评论区</h3>
+          </div>
+          <div class="panel-body">
+            <ul class="media-list">
+              <% for (var i = 0; i < comments.length; i++) { -%>
+                <li class="media">
+                  <div class="pull-left">
+                  <!-- 跳转到点击的锚点 -->
+                    <a class="comment" href="#comments", data-cid="<%= comments[i]._id %>"
+                      data-tid="<%= comments[i].from._id %>">
+                      <img src="http://placehold.it/40X40" alt="头像">
+                    </a>
+                  </div>
+                  <div class="media-body">
+                    <h4 class="media"><%= comments[i].from.username %></h4>
+                    <p><%= comments[i].content %></p>
+                    <% if (comments[i].reply && comments[i].reply.length > 0) { -%>
+                      <ul class="media-list">
+                        <% for (var j = 0; j < comments[i].reply.length; j++) { -%>
+                          <li class="media">
+                            <div class="pull-left">
+                            <!-- 跳转到点击的锚点 -->
+                              <a class="comment" href="#comments", data-cid="<%= comments[i]._id %>"
+                                data-tid="<%= comments[i].reply[j].from._id %>">
+                                <img src="http://placehold.it/40X40" alt="头像">
+                              </a>
+                            </div>
+                            <div class="media-body">
+                              <h4 class="media">
+                                <%= comments[i].reply[j].from.username %>
+                                <span class="text-info">&nbsp;回复&nbsp;</span>
+                                <%= comments[i].reply[j].to.username %>:
+                              </h4>
+                              <p><%= comments[i].reply[j].content %></p>
+                            </div>
+                          </li>
+                        <% } -%>
+                      </ul>
+                    <% } -%>
+                  </div>
+                </li>
+                <hr>
+              <% } -%>
+            </ul>
+          </div>
+          <!-- 评论表单 -->
+          <div id="comments">
+            <form id="commentForm" action="/user/comment" method="POST">
+              <input type="hidden" name="comment[movie]" value="<%= movie._id %>">
+              <% if (user) { -%>
+                <input type="hidden" name="comment[from]" value="<%= user._id%>">
+              <% } -%>
+              <div class="form-group">
+                <textarea class="form-control" name="comment[content]"></textarea>
+              </div>
+              <% if (user) { -%>
+                <button type="submit" class="btn btn-primary">提交</button>
+              <% } else { -%>
+                 <a href="#" data-toggle="modal" data-target="#signinModel">
+                  登陆后才能评论
+                  </a>
+              <% } -%>
+              
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <dl class="dl-horizontal">
+          <dt>电影名字</dt>
+          <dd><%= movie.title %></dd>
+          <dt>导演</dt>
+          <dd><%= movie.doctor %></dd>
+          <dt>国家</dt>
+          <dd><%= movie.country %></dd>
+          <dt>语言</dt>
+          <dd><%= movie.language %></dd>
+          <dt>上映年份</dt>
+          <dd><%= movie.year %></dd>
+          <dt>简介</dt>
+          <dd><%= movie.summary %></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+<script src="/js/detail.js"></script>
+</body>
+</html>

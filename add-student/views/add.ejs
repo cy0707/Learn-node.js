@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>添加学生</title>
+</head>
+<body>
+  <h1>请添加一个学生</h1>
+  <form method="GET" action="/doAddStudent">
+    <P>学号：<input type="number" name="sid"></P>
+    <P>姓名：<input type="text" name="name"></P>
+    <P>年龄<input type="number" name="age"></P>
+    <P>性别
+      <input type="radio" name="sex" value="女">女 
+      <input type="radio" name="sex" value="男">男
+    </P>
+    <button type="submit" id="add">添加</button>
+  </form>
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>班级说说</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+      .jumbotron img {
+        border: 2px solid #fff;
+        box-shadow: 0 0 8px 6px rgba(0, 0, 0, 0.2);
+      }
+      .error,
+      .success {
+        display: none;
+      }
+      /*防止分页的跳转到最上面*/
+      #publiclist {
+        min-height: 800px;
+      }
+      #publiclist .col-md-4 {
+        height: 300px;
+        overflow: hidden;
+      }
+    </style>
+  <body>
+      <% include header.ejs %>
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+          <div class="jumbotron">
+            <div class="container">
+            <% if(login){ %>
+              <!-- 如果登陆 -->
+                <div class="col-md-3" id="user-info">
+                  <a href="/uploadAvater"><img src="<%=avater%>" alt="头像"></a>
+                  <p><%= username%></p>
+                </div>
+                <div class="col-md-9">
+                  <form>
+                    <textarea class="form-control" name="content" id="content"></textarea>
+                    <button type="button" class="btn btn-default btn-success" id="public">发表说说</button>
+                    <div class="alert alert-danger error"></div>
+                    <div class="alert alert-success success"></div>
+                  </form>
+                </div>
+            <%} else {%>
+              <div class="col-md-4">
+                <h1>
+                  <a href="/uploadAvater"><img src="<%=avater%>" alt="头像"></a>
+                </h1>
+                <p>这是一个班级说说,请畅所欲言</p>
+                <p><a class="btn btn-primary btn-lg" href="/register" role="button">去注册»</a></p>
+              </div>
+              <div  class="col-md-8">
+                <form>
+                  <h2 class="text-center">请登陆</h2>
+                  <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" class="form-control" name="username" id="username" placeholder="请输入用户名">
+                  </div>
+                  <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" class="form-control" name="password" id="password" placeholder="请输入密码">
+                  </div>
+                  <button type="button" class="btn btn-default btn-success" id="login">登陆</button>
+                </form>
+                <!-- 提示 -->
+                <div class="alert alert-danger error"></div>
+                <div class="alert alert-success success"></div>
+              </div>
+            <%}%>
+            </div>
+          </div>
+
+          <div class="container">
+          <!-- 里面放ajax获取的说说10条记录-->
+            <%if(login){%>
+              <div class="row" id="publiclist"></div>
+              <!-- 分页 -->
+              <nav>
+                <ul class="pagination"></ul>
+              </nav>
+            <%} else {%>
+              <h2 class="text-center">您还没有登陆,不能查看说说</h2>
+            <%}%>
+            
+            <footer>
+              <p>&copy; 2016 Company, Inc.</p>
+            </footer>
+          </div> <!-- /container -->
+    
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script>
+    // 不同的页面可以提交同一个服务
+    // ajax可以嵌套----当让一般我们，这么做，我们把ajax封装成一个函数
+    // 让第一个ajax传递参数调用这个函数
+      $(function(){
+
+        //获取说说
+        let publicList = $('#publiclist');
+        // 要进行拼接的字符串
+        let publiclistStr = '';
+             
+        // 获取说说带分页
+        function getPage(page) {
+          $.ajax({
+            url: '/getAllPublic?page=' + page,
+            dataType: 'json',
+          })
+          .done(function(publicData) {
+            publiclistStr = '';
+            for (let i = 0; i < publicData.length; i++) {
+              // 从users中获取信息与从public中获取的说说组合起来
+              // 填充到模板中
+              // (function(){
+                // 这里的请求太多了。有多少个人就有多少个请求，
+                // 但是重复的人就不需要重复请求头像
+                // 这里设计的肯定是不合理的
+                // getAvater(publicData[i]);
+              // })(publicData[i]);
+
+              publiclistStr += ` <div class="col-md-4">
+                    <h2>${publicData[i].username}说：</h2>
+                    <p>${publicData[i].content}</p>
+                    <p>${publicData[i].pubTime}</p>
+                    <p><a class="btn btn-default" href="#" role="button">查看详细 &raquo;</a></p>
+                  </div>`;
+              publicList.html(publiclistStr);
+              
+            }
+           
+          })
+          .fail(function() {
+            console.log("error");
+          });
+        }
+        
+        // 最开始的时候，先列出第一说说，然后点击分页
+        // 分别列出其他相对应页的说说
+        getPage(1);
+
+        // 获取用户信息
+        // function getAvater(publicData){
+        //   $.ajax({
+        //     url: '/getUserinfo?username=' + publicData.username,
+        //     dataType: 'json',
+        //   })
+        //   .done(function(userinfo) {
+        //     publiclistStr += ` <div class="col-md-4">
+        //           <h2><img src="${userinfo.avater}"/>${publicData.username}说：</h2>
+        //           <p>${publicData.content}</p>
+        //           <p>${publicData.pubTime}</p>
+        //           <p><a class="btn btn-default" href="#" role="button">查看详细 &raquo;</a></p>
+        //         </div>`;
+        //     publicList.html(publiclistStr);
+        //   })
+        //   .fail(function() {
+        //     console.log("error");
+        //   });
+        // }
+        
+
+        // 获取分页
+        $.ajax({
+          url: '/getPublicAmount',
+        })
+        .done(function(publicAmount) {
+          // 后台传过来的是字符串,要转成数字
+          const allAmount = parseInt(publicAmount);
+          // 总页数 每一页10条说说
+          const pageAmount = Math.ceil(allAmount / 9);
+          let pageStr = '';
+          for (let p = 1; p <= pageAmount; p++) {
+            pageStr += `<li><a href="javascript:void(0)">${p}</a></li>`
+          }
+          $('.pagination').html(pageStr);
+          // 点击事件
+          $('.pagination li:first').addClass('active');
+          $('.pagination li').on('click', function(event) {
+            const index = $(this).index() + 1;
+            getPage(index);
+            $(this).addClass('active').siblings().removeClass('active')
+          });
+        })
+        .fail(function() {
+          console.log("error");
+        });
+
+        // 点击登陆
+        $('#login').on('click', function(event) {
+          $.ajax({
+            url: '/checkLogin',
+            type: 'POST',
+            dataType: '',
+            data: {
+              username: $('#username').val(),
+              password: $('#password').val()
+            }
+          })
+          .done(function(msg) {
+            if (msg == 'noUser') {
+              $('error').html('用户不存在').fadeIn().delay(3000).fadeOut();
+            }else if (msg == 'noPsw') {
+              $('.error').html('密码不对').fadeIn().delay(3000).fadeOut();
+              return;
+            }else if(msg == 'ok'){
+              $('.success').html('恭喜登陆成功').fadeIn().delay(3000).fadeOut();
+               window.location = '/';
+            }
+          })
+          .fail(function() {
+            console.log("error");
+          });
+          
+        });
+
+        // 点击发布按钮
+        $('#public').on('click', function(event) {
+          $.ajax({
+            url: '/public',
+            type: 'POST',
+            dataType: '',
+            data: {
+              content: $('#content').val()
+            }
+          })
+          .done(function(msg) {
+            // 做一个假的数据,先填充到页面中--因为在数据库中以及有数据了
+            // 但是要重新刷新或者再请求一下首页，才能把数据刷出。
+            let ppublicStr = '';
+            const pcontent = $('#content').val();
+            const ptime = new Date();
+            const pusername = $('#user-info p').text();
+            const pavater = $('#user-info img').attr('src');
+
+            ppublicStr += ` <div class="col-md-4">
+                  <h2><img src="${pavater}"/>${pusername}说：</h2>
+                  <p>${pcontent}</p>
+                  <p>${ptime}</p>
+                  <p><a class="btn btn-default" href="#" role="button">查看详细 &raquo;</a></p>
+                </div>`;
+
+            publicList.prepend(ppublicStr);
+
+            $('.success').html('发表成功').fadeIn().delay(3000).fadeOut();
+          })
+          .fail(function() {
+             $('.error').html('发表失败').fadeIn().delay(3000).fadeOut();
+          })
+          .always(function() {
+            console.log("complete");
+          });
+          
+        });
+
+        // 退出登陆
+        if ( $('#logout').length >=1) {
+          console.log(1);
+          $('#logout').on('click', function(event) {
+            $.ajax({
+              url: '/logout',
+            })
+            .done(function() {
+              window.location = '/';
+              console.log("success");
+            })
+            .fail(function() {
+              console.log("error");
+            })
+          });
+        }
+        
+      });
+    </script>
+  </body>
+</html>

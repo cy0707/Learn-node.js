@@ -1,0 +1,12 @@
+{
+  "name": "add-student",
+  "version": "1.0.0",
+  "description": "this is a node.js example",
+  "main": "app.js",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "ejs": "^2.5.6",
+    "express": "^4.15.3",
+    "mongoose": "^4.10.5"
+  }
+}
